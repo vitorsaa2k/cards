@@ -7,5 +7,5 @@ export interface InputType extends InputHTMLAttributes<HTMLInputElement> {
 export interface TableRowType {
   cpf?: string
   name: string
-  dateAdded: string
+  dateAdded?: string
 }
