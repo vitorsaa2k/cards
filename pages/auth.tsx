@@ -13,6 +13,7 @@ const Auth = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [name, setName] = useState('')
+  console.log(fields)
 
   const register = useCallback(async () => {
     try {
@@ -28,7 +29,7 @@ const Auth = () => {
         email,
         password,
         redirect: false,
-        callbackUrl: '/'
+        callbackUrl: '/auth'
       })
     } catch (error) {
       console.log(error)

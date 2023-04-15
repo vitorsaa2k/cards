@@ -12,7 +12,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       data: {
         name,
         cpf: parsedCpf
-        
       }
     }).then(data => res.status(200).json(data))
 
@@ -24,7 +23,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if(req.method === 'GET') {
     try {
-      const cards = prismadb.card.findMany().then(response => res.status(200).json(response))
+      const card = prismadb.card.findMany().then(data => res.status(200).json(data))
     } catch (error) {
       console.log(error)
       return res.status(400).end()

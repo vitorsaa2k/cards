@@ -1,4 +1,4 @@
-import { InputHTMLAttributes, ReactNode } from "react";
+import { ButtonHTMLAttributes, InputHTMLAttributes, ReactNode } from "react";
 
 export interface InputType extends InputHTMLAttributes<HTMLInputElement> {
   icon?: ReactNode
@@ -8,4 +8,8 @@ export interface TableRowType {
   cpf?: string
   name: string
   dateAdded?: string
+}
+
+export interface ButtonType extends ButtonHTMLAttributes<HTMLButtonElement>{
+
 }

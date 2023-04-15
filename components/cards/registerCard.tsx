@@ -12,7 +12,7 @@ export function NewCardForm() {
   return (
     <form>
       <Input value={name} onChange={(e) => setName(e.currentTarget.value)} />
-      <button onClick={submitForm} type="button">Submit</button>
+      <button onClick={submitForm} type="button">Enviar</button>
     </form>
   );
 }
