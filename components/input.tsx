@@ -6,8 +6,7 @@ import { IconBaseProps } from "react-icons/lib/esm/iconBase";
 
 export function Input(props:InputType) {
   return (
-    <div className="w-full flex items-center bg-white border-2 py-2 text-black border-gray-400 rounded-lg">
-      <label className="flex items-center gap-2">
+      <label className="flex items-center gap-2 w-full bg-white border-2 py-2 text-black border-gray-400 rounded-lg">
       <div className="ml-2">
         {props.icon ?? null}
       </div>
@@ -17,6 +16,5 @@ export function Input(props:InputType) {
           </button>
         </span>
       </label>
-    </div>
   )
 }
