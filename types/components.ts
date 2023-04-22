@@ -7,7 +7,8 @@ export interface InputType extends InputHTMLAttributes<HTMLInputElement> {
 export interface TableRowType {
   cpf?: string
   name: string
-  dateAdded?: string
+  updatedAt?: string
+  status?: string
 }
 
 export interface ButtonType extends ButtonHTMLAttributes<HTMLButtonElement>{
