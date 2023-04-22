@@ -37,7 +37,7 @@ function Card() {
     <>
       <div className="text-white">
         <h1>Cards</h1>
-        <div>50 cartões</div>
+        <div>{cards.length > 1 ? `${cards.length} Cartões` : `1 Cartão`}</div>
         <div>
           <Input
             onChange={(e) => setName(e.currentTarget.value)}
@@ -48,6 +48,7 @@ function Card() {
         </div>
         <div>
           <Button>Trazer Cartões</Button>
+          <TableRow name="Nome" cpf="CPF" updatedAt="Atualizado Em" status="Status" />
          {cards.map(card => {
             return (
               <TableRow key={card.id} name={card.name} cpf={card.cpf} />
