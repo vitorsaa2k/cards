@@ -6,7 +6,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     
   try {
     const {cpf, name}= req.body
-    const parsedCpf = cpf ?? ''
+    const parsedCpf = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4") ?? ''
 
     const card = await prismadb.card.create({
       data: {

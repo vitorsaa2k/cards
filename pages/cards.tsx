@@ -1,64 +1,69 @@
-import { useState, useCallback, useEffect } from "react"
-import { Input } from "@/components/input"
-import {RxMagnifyingGlass} from 'react-icons/rx'
+import { useState, useEffect } from "react";
+import { Input } from "@/components/input";
+import { RxMagnifyingGlass } from "react-icons/rx";
 import { TableRow } from "@/components/cards/tableRow";
-import { NewCardForm } from "@/components/cards/registerCard";
-import axios from "axios";
 import { Button } from "@/components/common/button";
 import { CardType } from "@/types/api";
-
+import { Modal } from "@/components/common/modal";
+import { RegisterCard } from "@/components/cards/registerCard";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { addCard, getCard } from "@/actions/cards";
 
 function Card() {
+	const cardsQuery = useQuery<CardType[]>(["cards"], getCard);
+	const cardsMutation = useMutation((card: CardType) => addCard(card));
+	const [cards, setCards] = useState(cardsQuery.data);
+	const [name, setName] = useState("");
+	const [isShowing, setIsShowing] = useState(false);
 
-  const [cards, setCards] = useState<CardType[]>([]);
-  const [name, setName] = useState('')
+	useEffect(() => {
+		setCards(cardsQuery.data);
+	}, [cardsQuery.data]);
 
-  
-  async function getCards() {
-    const res = await axios.get('/api/card').then(response => {
-      setCards(response.data)
-    }).catch(error => console.log(error))
-  }
+	const cardsComponent = cards?.map((card: CardType) => {
+		const parseUpdated = card?.updatedAt?.split("T")[0].split("-").join("/");
+		return (
+			<TableRow
+				key={card.id}
+				name={card.name}
+				cpf={card.cpf}
+				updatedAt={parseUpdated}
+			/>
+		);
+	});
 
-  useEffect(() => {
-    getCards()
-  }, [])
-  
-  
-  async function sendCard() {
-    try {
-      axios.post('/api/card', {name}).then(response => console.log(response))
-    } catch (error) {
-      console.log(error)
-    }
-  }
-    
 	return (
-    <>
-      <div className="text-white">
-        <h1>Cards</h1>
-        <div>{cards.length > 1 ? `${cards.length} Cartões` : `1 Cartão`}</div>
-        <div>
-          <Input
-            onChange={(e) => setName(e.currentTarget.value)}
-            icon={<RxMagnifyingGlass className="text-black" size={24} />}
-            placeholder="Name"
-          />
-          <Button onClick={sendCard}>Send</Button>
-        </div>
-        <div>
-          <Button>Trazer Cartões</Button>
-          <TableRow name="Nome" cpf="CPF" updatedAt="Atualizado Em" status="Status" />
-         {cards.map(card => {
-            return (
-              <TableRow key={card.id} name={card.name} cpf={card.cpf} />
-            )
-          })}
-        </div>
-        
-      </div>
-    </>
-  );
-};
+		<>
+			<div className='text-white'>
+				<h1>Cards</h1>
+				<div>
+					{cards?.length! > 1 ? `${cards?.length} Cartões` : `1 Cartão`}
+				</div>
+				<div>
+					<Input
+						onChange={e => setName(e.currentTarget.value)}
+						icon={<RxMagnifyingGlass className='text-black' size={24} />}
+						placeholder='Name'
+					/>
+				</div>
+				<div>
+					<Button onClick={e => setIsShowing(prevState => !prevState)}>
+						Adicionar Cartão
+					</Button>
+					<Modal isShowing={isShowing} toggle={() => setIsShowing(false)}>
+						<RegisterCard toggle={() => setIsShowing(false)} />
+					</Modal>
+					<TableRow
+						name='Nome'
+						cpf='CPF'
+						updatedAt='Atualizado Em'
+						status='Status'
+					/>
+					{cardsComponent}
+				</div>
+			</div>
+		</>
+	);
+}
 
-export default Card
+export default Card;
