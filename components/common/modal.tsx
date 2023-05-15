@@ -15,13 +15,13 @@ export function Modal({ isShowing, toggle, children }: ModalType) {
 			{isShowing ? (
 				<div
 					onClick={toggle}
-					className='absolute animate-opacityUp bg-black/40 flex justify-center items-center w-full h-full right-0 left-0 bottom-0 top-0'
+					className="absolute animate-opacityUp bg-black/40 flex justify-center items-center w-full h-full right-0 left-0 bottom-0 top-0"
 				>
 					<div
 						onClick={e => {
 							e.stopPropagation();
 						}}
-						className='animate-slideUp bg-slate-400 min-h-[200px] min-w-[500px] flex flex-col justify-center rounded-lg'
+						className="animate-slideUp bg-slate-400 min-h-[200px] min-w-[500px] flex flex-col justify-center rounded-lg"
 					>
 						{children}
 					</div>
