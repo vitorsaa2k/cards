@@ -8,3 +8,11 @@ export async function addCard(card: CardType) {
 export async function getCard() {
   return await axios.get('/api/card').then(res => res.data).catch(error => console.error(error))
 }
+
+export async function deleteCard(id: string) {
+  return await axios.post('/api/card/delete', {id}).then(res => res.data).catch(error => console.error(error))
+}
+
+export async function setDelivered(id: string) {
+  return await axios.post('/api/card/deliver', {id}).then(res => res.data).catch(error => console.error(error))
+}
