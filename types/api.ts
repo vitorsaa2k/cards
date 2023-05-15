@@ -6,4 +6,5 @@ export interface CardType {
   cpf?: string
   createdAt?: string
   updatedAt?: string
+  wasDelivered?: boolean
 }

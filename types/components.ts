@@ -5,10 +5,11 @@ export interface InputType extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 export interface TableRowType {
+  id: string
   cpf?: string
   name: string
   updatedAt?: string
-  status?: string
+  wasDelivered?: string | boolean
 }
 
 export interface ButtonType extends ButtonHTMLAttributes<HTMLButtonElement>{
