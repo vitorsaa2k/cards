@@ -3,7 +3,6 @@ import type { AppProps } from "next/app";
 import { Inter } from "next/font/google";
 import Head from "next/head";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const queryClient = new QueryClient();
 
@@ -20,7 +19,6 @@ export default function App({ Component, pageProps }: AppProps) {
 			</Head>
 			<QueryClientProvider client={queryClient}>
 				<Component {...pageProps} />
-				<ReactQueryDevtools />
 			</QueryClientProvider>
 		</main>
 	);

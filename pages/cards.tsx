@@ -18,6 +18,7 @@ function Card() {
 
 	useEffect(() => {
 		setCards(cardsQuery.data);
+		console.log(cardsQuery.data);
 	}, [cardsQuery.data]);
 
 	const cardsComponent = cards?.map((card: CardType) => {
@@ -25,16 +26,18 @@ function Card() {
 		return (
 			<TableRow
 				key={card.id}
+				id={card.id!}
 				name={card.name}
 				cpf={card.cpf}
 				updatedAt={parseUpdated}
+				wasDelivered={card.wasDelivered}
 			/>
 		);
 	});
 
 	return (
 		<>
-			<div className='text-white'>
+			<div className="text-white">
 				<h1>Cards</h1>
 				<div>
 					{cards?.length! > 1 ? `${cards?.length} Cartões` : `1 Cartão`}
@@ -42,8 +45,8 @@ function Card() {
 				<div>
 					<Input
 						onChange={e => setName(e.currentTarget.value)}
-						icon={<RxMagnifyingGlass className='text-black' size={24} />}
-						placeholder='Name'
+						icon={<RxMagnifyingGlass className="text-black" size={24} />}
+						placeholder="Name"
 					/>
 				</div>
 				<div>
@@ -54,10 +57,11 @@ function Card() {
 						<RegisterCard toggle={() => setIsShowing(false)} />
 					</Modal>
 					<TableRow
-						name='Nome'
-						cpf='CPF'
-						updatedAt='Atualizado Em'
-						status='Status'
+						id=""
+						name="Nome"
+						cpf="CPF"
+						updatedAt="Atualizado Em"
+						wasDelivered="Status"
 					/>
 					{cardsComponent}
 				</div>
