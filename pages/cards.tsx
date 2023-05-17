@@ -2,18 +2,16 @@ import { useState, useEffect } from "react";
 import { Input } from "@/components/input";
 import { RxMagnifyingGlass } from "react-icons/rx";
 import { TableRow } from "@/components/cards/tableRow";
-import { Button } from "@/components/common/button";
 import { CardType } from "@/types/api";
 import { Modal } from "@/components/common/modal";
-import { RegisterCard } from "@/components/cards/registerCard";
-import { useQuery, useMutation } from "@tanstack/react-query";
-import { addCard, getCard } from "@/actions/cards";
+import { useQuery } from "@tanstack/react-query";
+import { getCard } from "@/actions/cards";
+import { AddCardButton } from "@/components/cards/addCardButton";
 
 function Card() {
 	const cardsQuery = useQuery<CardType[]>(["cards"], getCard);
 	const [cards, setCards] = useState(cardsQuery.data);
 	const [name, setName] = useState("");
-	const [isShowing, setIsShowing] = useState(false);
 
 	const filteredList = cardsQuery.data
 		?.filter(value => value.name.toLowerCase().includes(name.toLowerCase()))
@@ -62,21 +60,17 @@ function Card() {
 					{cards?.length! > 1
 						? `Cartões Registrados: ${cards?.length}`
 						: `1 Cartão`}
+					<div className="flex justify-end p-4">
+						<AddCardButton />
+					</div>
 				</div>
-				<div>
+				<div></div>
+				<div className="p-5">
 					<Input
 						onChange={e => setName(e.currentTarget.value)}
 						icon={<RxMagnifyingGlass className="text-slate-500" size={24} />}
 						placeholder="Nome"
 					/>
-				</div>
-				<div>
-					<Button onClick={e => setIsShowing(prevState => !prevState)}>
-						Adicionar Cartão
-					</Button>
-					<Modal isShowing={isShowing} toggle={() => setIsShowing(false)}>
-						<RegisterCard toggle={() => setIsShowing(false)} />
-					</Modal>
 					<TableRow
 						id=""
 						name="Nome"

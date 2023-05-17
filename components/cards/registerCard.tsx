@@ -60,11 +60,7 @@ export function RegisterCard({ toggle }: { toggle: () => void }) {
 					onChange={handleInputs}
 				/>
 				<div className="flex gap-3">
-					<Button
-						className="flex items-center justify-center"
-						onClick={submitForm}
-						type="button"
-					>
+					<Button onClick={submitForm} type="button">
 						{mutation.isLoading ? <ScreenLoading isSpinner /> : "Enviar"}
 					</Button>
 					<Button onClick={toggle} type="button">

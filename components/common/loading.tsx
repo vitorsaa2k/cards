@@ -8,7 +8,7 @@ export function ScreenLoading({ isSpinner }: { isSpinner?: boolean }) {
 					<Oval
 						height={24}
 						width={24}
-						color="#b4b5b8"
+						color="#fff"
 						visible={true}
 						ariaLabel="oval-loading"
 						secondaryColor="#fff"
@@ -22,12 +22,12 @@ export function ScreenLoading({ isSpinner }: { isSpinner?: boolean }) {
 					<Oval
 						height={30}
 						width={30}
-						color="#b4b5b8"
+						color="#fff"
 						visible={true}
 						ariaLabel="oval-loading"
 						secondaryColor="#fff"
-						strokeWidth={2}
-						strokeWidthSecondary={2}
+						strokeWidth={3}
+						strokeWidthSecondary={3}
 					/>
 				</div>
 			)}
