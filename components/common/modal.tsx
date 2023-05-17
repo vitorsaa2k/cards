@@ -21,7 +21,7 @@ export function Modal({ isShowing, toggle, children }: ModalType) {
 						onClick={e => {
 							e.stopPropagation();
 						}}
-						className="animate-slideUp bg-slate-400 min-h-[200px] min-w-[500px] flex flex-col justify-center rounded-lg"
+						className="animate-slideUp bg-slate-400 min-w-[500px] flex flex-col justify-arround rounded-lg"
 					>
 						{children}
 					</div>

@@ -3,7 +3,6 @@ import { Input } from "@/components/input";
 import { RxMagnifyingGlass } from "react-icons/rx";
 import { TableRow } from "@/components/cards/tableRow";
 import { CardType } from "@/types/api";
-import { Modal } from "@/components/common/modal";
 import { useQuery } from "@tanstack/react-query";
 import { getCard } from "@/actions/cards";
 import { AddCardButton } from "@/components/cards/addCardButton";
@@ -55,14 +54,16 @@ function Card() {
 	return (
 		<>
 			<div className="text-white">
-				<h1>Cards</h1>
-				<div>
-					{cards?.length! > 1
-						? `Cartões Registrados: ${cards?.length}`
-						: `1 Cartão`}
-					<div className="flex justify-end p-4">
-						<AddCardButton />
+				<div className="p-14 flex flex-col">
+					<h1 className="text-6xl">Cartões</h1>
+					<div className="text-2xl">
+						{cards?.length! > 1
+							? `Cartões Registrados: ${cards?.length}`
+							: `1 Cartão`}
 					</div>
+				</div>
+				<div className="flex justify-end p-4">
+					<AddCardButton />
 				</div>
 				<div></div>
 				<div className="p-5">
