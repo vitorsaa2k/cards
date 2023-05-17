@@ -4,6 +4,7 @@ import { Button } from "../common/button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { addCard } from "@/actions/cards";
 import { CardType } from "@/types/api";
+import { ScreenLoading } from "../common/loading";
 
 export function RegisterCard({ toggle }: { toggle: () => void }) {
 	const queryClient = useQueryClient();
@@ -44,27 +45,33 @@ export function RegisterCard({ toggle }: { toggle: () => void }) {
 	}
 
 	return (
-		<form className="p-2 flex gap-1 flex-col">
-			<Input
-				name="name"
-				placeholder="Digite o nome"
-				value={form.name}
-				onChange={handleInputs}
-			/>
-			<Input
-				name="cpf"
-				placeholder="Digite o CPF"
-				value={form.cpf}
-				onChange={handleInputs}
-			/>
-			<div className="flex gap-3">
-				<Button onClick={submitForm} type="button">
-					Enviar
-				</Button>
-				<Button onClick={toggle} type="button">
-					Cancelar
-				</Button>
-			</div>
-		</form>
+		<>
+			<form className="p-2 flex gap-1 flex-col">
+				<Input
+					name="name"
+					placeholder="Digite o nome"
+					value={form.name}
+					onChange={handleInputs}
+				/>
+				<Input
+					name="cpf"
+					placeholder="Digite o CPF"
+					value={form.cpf}
+					onChange={handleInputs}
+				/>
+				<div className="flex gap-3">
+					<Button
+						className="flex items-center justify-center"
+						onClick={submitForm}
+						type="button"
+					>
+						{mutation.isLoading ? <ScreenLoading isSpinner /> : "Enviar"}
+					</Button>
+					<Button onClick={toggle} type="button">
+						Cancelar
+					</Button>
+				</div>
+			</form>
+		</>
 	);
 }

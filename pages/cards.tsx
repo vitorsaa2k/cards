@@ -11,17 +11,33 @@ import { addCard, getCard } from "@/actions/cards";
 
 function Card() {
 	const cardsQuery = useQuery<CardType[]>(["cards"], getCard);
-	const cardsMutation = useMutation((card: CardType) => addCard(card));
 	const [cards, setCards] = useState(cardsQuery.data);
 	const [name, setName] = useState("");
 	const [isShowing, setIsShowing] = useState(false);
+
+	const filteredList = cardsQuery.data
+		?.filter(value => value.name.toLowerCase().includes(name.toLowerCase()))
+		?.map((card: CardType) => {
+			const parseUpdated = card?.updatedAt?.split("T")[0].split("-").join("/");
+			return (
+				<TableRow
+					key={card.id}
+					id={card.id!}
+					name={card.name}
+					cpf={card.cpf}
+					updatedAt={parseUpdated}
+					wasDelivered={card.wasDelivered}
+				/>
+			);
+		});
+	console.log(filteredList);
 
 	useEffect(() => {
 		setCards(cardsQuery.data);
 		console.log(cardsQuery.data);
 	}, [cardsQuery.data]);
 
-	const cardsComponent = cards?.map((card: CardType) => {
+	const initialCards = cards?.map((card: CardType) => {
 		const parseUpdated = card?.updatedAt?.split("T")[0].split("-").join("/");
 		return (
 			<TableRow
@@ -35,18 +51,23 @@ function Card() {
 		);
 	});
 
+	const cardsComponent =
+		filteredList?.length === 0 ? initialCards : filteredList;
+
 	return (
 		<>
 			<div className="text-white">
 				<h1>Cards</h1>
 				<div>
-					{cards?.length! > 1 ? `${cards?.length} Cartões` : `1 Cartão`}
+					{cards?.length! > 1
+						? `Cartões Registrados: ${cards?.length}`
+						: `1 Cartão`}
 				</div>
 				<div>
 					<Input
 						onChange={e => setName(e.currentTarget.value)}
-						icon={<RxMagnifyingGlass className="text-black" size={24} />}
-						placeholder="Name"
+						icon={<RxMagnifyingGlass className="text-slate-500" size={24} />}
+						placeholder="Nome"
 					/>
 				</div>
 				<div>

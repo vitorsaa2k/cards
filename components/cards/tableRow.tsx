@@ -28,7 +28,9 @@ export function TableRow({
 	return (
 		<div className="grid grid-cols-4 items-center gap-2 border-b text-white">
 			<div className="border-r-2 p-4 h-full text-center">{name ?? null}</div>
-			<div className="border-r-2 p-4 h-full text-center">{cpf ?? null}</div>
+			<div className="border-r-2 p-4 h-full text-center">
+				{cpf?.length === 0 ? "Não informado" : cpf}
+			</div>
 			<div className="border-r-2 p-4 h-full text-center">
 				{updatedAt ?? null}
 			</div>
@@ -37,30 +39,36 @@ export function TableRow({
 				<ScreenLoading />
 			) : null}
 
-			<div className="p-4 h-full text-center flex items-center justify-center">
-				{wasDelivered !== "Status"
-					? `${wasDelivered ? "Entregue" : "Em transito"}`
-					: "Status"}
+			<div className="p-4 h-full text-center flex items-center justify-center gap-1">
+				<>
+					{wasDelivered !== "Status"
+						? `${wasDelivered ? "Entregue" : "Em transito"}`
+						: "Status"}
+				</>
 
-				{wasDelivered === "Status" ? null : (
-					<button
-						onClick={() => {
-							mutateToDelete.mutate(id);
-						}}
-						className="rounded p-1 hover:bg-red-500 transition"
-					>
-						<VscTrash size={24} />
-					</button>
-				)}
+				<>
+					{wasDelivered === "Status" ? null : (
+						<button
+							onClick={() => {
+								mutateToDelete.mutate(id);
+							}}
+							className="rounded p-1 hover:bg-red-500 transition"
+						>
+							<VscTrash size={24} />
+						</button>
+					)}
+				</>
 
-				{wasDelivered === "Status" ? null : (
-					<button
-						onClick={() => mutateToDelivered.mutate(id)}
-						className="rounded p-1 hover:bg-green-500 transition"
-					>
-						<VscCheck size={24} />
-					</button>
-				)}
+				<>
+					{wasDelivered === "Status" ? null : (
+						<button
+							onClick={() => mutateToDelivered.mutate(id)}
+							className="rounded p-1 hover:bg-green-500 transition"
+						>
+							<VscCheck size={24} />
+						</button>
+					)}
+				</>
 			</div>
 		</div>
 	);
