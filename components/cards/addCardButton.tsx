@@ -13,7 +13,7 @@ export function AddCardButton() {
 				onClick={e => setIsShowing(prevState => !prevState)}
 			>
 				Adicionar Cartão
-				<RiAddCircleLine />
+				<RiAddCircleLine size={20} />
 			</button>
 			<Modal isShowing={isShowing} toggle={() => setIsShowing(false)}>
 				<RegisterCard toggle={() => setIsShowing(false)} />
