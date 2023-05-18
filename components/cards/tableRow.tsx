@@ -40,7 +40,7 @@ export function TableRow({
 			<div className="p-4 h-full text-center flex items-center justify-center gap-1">
 				<>
 					{wasDelivered !== "Status"
-						? `${wasDelivered ? "Entregue" : "Em transito"}`
+						? `${wasDelivered ? "Entregue" : "Na loja"}`
 						: "Status"}
 				</>
 
