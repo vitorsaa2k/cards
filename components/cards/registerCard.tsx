@@ -1,5 +1,5 @@
 import { ChangeEvent, useState } from "react";
-import { Input } from "../input";
+import { Input } from "../common/input";
 import { Button } from "../common/button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { addCard } from "@/actions/cards";

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Input } from "@/components/input";
+import { Input } from "@/components/common/input";
 import { RxMagnifyingGlass } from "react-icons/rx";
 import { TableRow } from "@/components/cards/tableRow";
 import { CardType } from "@/types/api";
