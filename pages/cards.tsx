@@ -6,35 +6,17 @@ import { CardType } from "@/types/api";
 import { useQuery } from "@tanstack/react-query";
 import { getCard } from "@/actions/cards";
 import { AddCardButton } from "@/components/cards/addCardButton";
+import axios from "axios";
 
 function Card() {
 	const cardsQuery = useQuery<CardType[]>(["cards"], getCard);
 	const [cards, setCards] = useState(cardsQuery.data);
-	const [name, setName] = useState("");
-
-	const filteredList = cardsQuery.data
-		?.filter(value => value.name.toLowerCase().includes(name.toLowerCase()))
-		?.map((card: CardType) => {
-			const parseUpdated = card?.updatedAt?.split("T")[0].split("-").join("/");
-			return (
-				<TableRow
-					key={card.id}
-					id={card.id!}
-					name={card.name}
-					cpf={card.cpf}
-					updatedAt={parseUpdated}
-					wasDelivered={card.wasDelivered}
-				/>
-			);
-		});
-	console.log(filteredList);
 
 	useEffect(() => {
 		setCards(cardsQuery.data);
-		console.log(cardsQuery.data);
 	}, [cardsQuery.data]);
 
-	const initialCards = cards?.map((card: CardType) => {
+	const cardsComponent = cards?.map((card: CardType) => {
 		const parseUpdated = card?.updatedAt?.split("T")[0].split("-").join("/");
 		return (
 			<TableRow
@@ -48,8 +30,11 @@ function Card() {
 		);
 	});
 
-	const cardsComponent =
-		filteredList?.length === 0 ? initialCards : filteredList;
+	async function searchOnDB(name: string) {
+		await axios.post("/api/card/search", { name }).then(response => {
+			setCards(response.data);
+		});
+	}
 
 	return (
 		<>
@@ -57,9 +42,7 @@ function Card() {
 				<div className="p-14 flex flex-col">
 					<h1 className="text-6xl">Cartões</h1>
 					<div className="text-2xl">
-						{cards?.length! > 1
-							? `Cartões Registrados: ${cards?.length}`
-							: `1 Cartão`}
+						{`Cartões Registrados: ${cards?.length}`}
 					</div>
 				</div>
 				<div className="flex justify-end p-4">
@@ -68,7 +51,7 @@ function Card() {
 				<div></div>
 				<div className="p-5">
 					<Input
-						onChange={e => setName(e.currentTarget.value)}
+						onChange={e => searchOnDB(e.currentTarget.value)}
 						icon={<RxMagnifyingGlass className="text-slate-500" size={24} />}
 						placeholder="Nome"
 					/>
