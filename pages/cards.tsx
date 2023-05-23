@@ -7,11 +7,19 @@ import { useQuery } from "@tanstack/react-query";
 import { getCard } from "@/actions/cards";
 import { AddCardButton } from "@/components/cards/addCardButton";
 import axios from "axios";
+import { useDebounce } from "@/hooks/useDebounce";
 
 function Card() {
 	const cardsQuery = useQuery<CardType[]>(["cards"], getCard);
 	const [cards, setCards] = useState(cardsQuery.data);
 
+	const debounceSearch = useDebounce(searchOnDB, 500);
+
+	async function searchOnDB(name: string) {
+		await axios.post("/api/card/search", { name }).then(response => {
+			setCards(response.data);
+		});
+	}
 	useEffect(() => {
 		setCards(cardsQuery.data);
 	}, [cardsQuery.data]);
@@ -30,12 +38,6 @@ function Card() {
 		);
 	});
 
-	async function searchOnDB(name: string) {
-		await axios.post("/api/card/search", { name }).then(response => {
-			setCards(response.data);
-		});
-	}
-
 	return (
 		<>
 			<div className="text-white">
@@ -51,7 +53,7 @@ function Card() {
 				<div></div>
 				<div className="p-5">
 					<Input
-						onChange={e => searchOnDB(e.currentTarget.value)}
+						onChange={e => debounceSearch(e.currentTarget.value)}
 						icon={<RxMagnifyingGlass className="text-slate-500" size={24} />}
 						placeholder="Nome"
 					/>
