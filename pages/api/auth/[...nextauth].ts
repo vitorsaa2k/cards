@@ -1,22 +1,28 @@
-import NextAuth from "next-auth";
-import Credentials from "next-auth/providers/credentials";
-import prismadb from "@/libs/prismadb"
-import { compare } from "bcrypt"
+import NextAuth, { AuthOptions } from 'next-auth';
+import GoogleProvider from 'next-auth/providers/google';
+import Credentials from 'next-auth/providers/credentials';
+import { PrismaAdapter } from '@next-auth/prisma-adapter';
+import { compare } from 'bcrypt';
+import prismadb from '@/libs/prismadb';
 
-export default NextAuth({
+export const authOptions: AuthOptions = {
   providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID || '',
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
+    }),
     Credentials({
       id: 'credentials',
       name: 'Credentials',
       credentials: {
         email: {
           label: 'Email',
-          type: 'text'
+          type: 'text',
         },
         password: {
           label: 'Password',
           type: 'password'
-        },
+        }
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
@@ -40,17 +46,15 @@ export default NextAuth({
         return user;
       }
     })
-
   ],
-  pages: {
-    signIn: '/auth',
-  },
   debug: process.env.NODE_ENV === 'development',
-  session: {
-    strategy: 'jwt',
-  },
+  adapter: PrismaAdapter(prismadb),
+  session: { strategy: 'jwt' },
   jwt: {
     secret: process.env.NEXTAUTH_JWT_SECRET,
   },
   secret: process.env.NEXTAUTH_SECRET
-})
+};
+
+export default NextAuth(authOptions);
+
