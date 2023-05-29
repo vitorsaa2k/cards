@@ -4,22 +4,22 @@ import { RxMagnifyingGlass } from "react-icons/rx";
 import { TableRow } from "@/components/cards/tableRow";
 import { CardType } from "@/types/api";
 import { useQuery } from "@tanstack/react-query";
-import { getCard } from "@/actions/cards";
+import { getCards, searchCardOnDB } from "@/actions/cards";
 import { AddCardButton } from "@/components/cards/addCardButton";
-import axios from "axios";
 import { useDebounce } from "@/hooks/useDebounce";
+import Skeleton from "react-loading-skeleton";
 
 function Card() {
-	const cardsQuery = useQuery<CardType[]>(["cards"], getCard);
+	const cardsQuery = useQuery<CardType[]>(["cards"], getCards);
 	const [cards, setCards] = useState(cardsQuery.data);
+
+	async function searchOnDB(name: string) {
+		setCards([]);
+		await searchCardOnDB(name).then(res => setCards(res));
+	}
 
 	const debounceSearch = useDebounce(searchOnDB, 500);
 
-	async function searchOnDB(name: string) {
-		await axios.post("/api/card/search", { name }).then(response => {
-			setCards(response.data);
-		});
-	}
 	useEffect(() => {
 		setCards(cardsQuery.data);
 	}, [cardsQuery.data]);
@@ -44,7 +44,7 @@ function Card() {
 				<div className="p-14 flex flex-col">
 					<h1 className="text-6xl">Cartões</h1>
 					<div className="text-2xl">
-						{`Cartões Registrados: ${cards?.length}`}
+						{`Cartões Registrados: ${cardsQuery.data?.length}`}
 					</div>
 				</div>
 				<div className="flex justify-end p-4">
@@ -64,7 +64,11 @@ function Card() {
 						updatedAt="Atualizado Em"
 						wasDelivered="Status"
 					/>
-					{cardsComponent}
+					{cards?.length === 0 ? (
+						<Skeleton height={50} count={3} />
+					) : (
+						cardsComponent || <Skeleton height={50} count={5} />
+					)}
 				</div>
 			</div>
 		</>

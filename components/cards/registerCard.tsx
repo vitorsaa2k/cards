@@ -47,6 +47,7 @@ export function RegisterCard({ toggle }: { toggle: () => void }) {
 	return (
 		<>
 			<form className="p-2 gap-2 flex flex-col justify-between">
+				<div className="text-2xl">Adicionar cartão</div>
 				<Input
 					name="name"
 					placeholder="Digite o nome"
