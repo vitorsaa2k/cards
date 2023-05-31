@@ -60,7 +60,7 @@ export function RegisterCard({ toggle }: { toggle: () => void }) {
 					value={form.cpf}
 					onChange={handleInputs}
 				/>
-				<div className="flex gap-3">
+				<div className="flex max-h-10 gap-3">
 					<Button onClick={submitForm} type="button">
 						{mutation.isLoading ? <ScreenLoading isSpinner /> : "Enviar"}
 					</Button>
