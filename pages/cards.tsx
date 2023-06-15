@@ -44,7 +44,9 @@ function Card() {
 				<div className="p-14 flex flex-col">
 					<h1 className="text-6xl">Cartões</h1>
 					<div className="text-2xl">
-						{`Cartões Registrados: ${cardsQuery.data?.length}`}
+						{`Cartões Registrados: ${
+							cardsQuery.data?.length ? cardsQuery.data?.length : "0"
+						}`}
 					</div>
 				</div>
 				<div className="flex justify-end p-4">
