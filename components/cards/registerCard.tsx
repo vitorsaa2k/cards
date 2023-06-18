@@ -5,6 +5,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { addCard } from "@/actions/cards";
 import { CardType } from "@/types/api";
 import { ScreenLoading } from "../common/loading";
+import { formatCpf } from "@/actions/common";
 
 export function RegisterCard({ toggle }: { toggle: () => void }) {
 	const queryClient = useQueryClient();
@@ -20,23 +21,14 @@ export function RegisterCard({ toggle }: { toggle: () => void }) {
 		},
 	});
 
-	const numbersRegex = /^[0-9]+$/;
-
 	function submitForm() {
 		mutation.mutate(form);
-	}
-
-	function formatCpf(cpf: string) {
-		return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
 	}
 
 	function handleInputs(e: ChangeEvent<HTMLInputElement>) {
 		let { name, value } = e.currentTarget;
 		if (name === "cpf" && value.length > 0) {
-			numbersRegex.test(value) ? (value = value) : (value = form.cpf);
-			value = formatCpf(value);
-		} else if (name === "cpf" && value.length === 0) {
-			value = value = "";
+			value = formatCpf(value, form.cpf);
 		}
 		setForm(prevForm => ({
 			...prevForm,
