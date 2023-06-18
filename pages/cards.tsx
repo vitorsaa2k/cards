@@ -40,7 +40,7 @@ function Card() {
 
 	return (
 		<>
-			<div className="text-white">
+			<div className="">
 				<div className="p-14 flex flex-col">
 					<h1 className="text-6xl">Cartões</h1>
 					<div className="text-2xl">
