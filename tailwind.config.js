@@ -13,8 +13,8 @@ module.exports = {
 					"100%": { transform: "translate(0, 0)" },
 				},
 				dropDown: {
-					"0%": { transform: "translate(-20px, 0)", opacity: "0" },
-					"100%": { transform: "translate(-20px, 30px)", opacity: "1" },
+					"0%": { top: "10px", opacity: "0" },
+					"100%": { top: "40px", opacity: "1" },
 				},
 				opacityUp: {
 					"0%": { opacity: "0" },
