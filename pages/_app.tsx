@@ -4,7 +4,7 @@ import type { AppProps } from "next/app";
 import { Inter } from "next/font/google";
 import Head from "next/head";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Header } from "@/components/common/header";
+import { Header } from "@/components/nav/nav";
 import { SessionProvider } from "next-auth/react";
 import type { Session } from "next-auth";
 import { SkeletonTheme } from "react-loading-skeleton";
@@ -21,13 +21,13 @@ export default function App({
 	pageProps: { session, ...pageProps },
 }: AppProps<{ session: Session }>) {
 	return (
-		<main className={`${inter.className}, text-white`}>
+		<main className={`${inter.className}`}>
 			<Head>
 				<title>Cards App</title>
 			</Head>
 			<SessionProvider session={session}>
 				<QueryClientProvider client={queryClient}>
-					<SkeletonTheme baseColor="#313131" highlightColor="#525252">
+					<SkeletonTheme baseColor="#ededed" highlightColor="#d1d1d1">
 						<Header />
 						<Component {...pageProps} />
 					</SkeletonTheme>

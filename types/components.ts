@@ -1,3 +1,4 @@
+import { Session } from "next-auth";
 import { ButtonHTMLAttributes, HTMLAttributes, InputHTMLAttributes, ReactNode } from "react";
 
 export interface InputType extends InputHTMLAttributes<HTMLInputElement> {
@@ -19,4 +20,8 @@ export interface ButtonType extends ButtonHTMLAttributes<HTMLButtonElement>{
 export interface ModalType extends HTMLAttributes<HTMLDivElement> {
   isShowing: boolean
   toggle: () => void
+}
+
+export interface UserNameType {
+  session: Session
 }

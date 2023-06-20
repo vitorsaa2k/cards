@@ -26,7 +26,7 @@ export function TableRow({
 	});
 
 	return (
-		<div className="grid grid-cols-4 items-center gap-2 border-b text-white m-1">
+		<div className="grid grid-cols-4 items-center gap-2 border-b text-black m-1">
 			<div className="p-4 h-full text-center">{name ?? null}</div>
 			<div className="p-4 h-full text-center">
 				{cpf?.length === 0 ? "Não informado" : cpf}

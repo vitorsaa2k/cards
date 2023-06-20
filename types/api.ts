@@ -8,3 +8,14 @@ export interface CardType {
   updatedAt?: string
   wasDelivered?: boolean
 }
+
+export interface UserType {
+  id: string
+  name: string
+  email: string 
+  cpf: string
+  emailVerified: string
+  hashedPassword: string
+  createdAt: string
+  updatedAt: string
+}

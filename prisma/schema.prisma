@@ -13,8 +13,8 @@ datasource db {
 model User {
   id             String    @id @default(auto()) @map("_id") @db.ObjectId
   name           String
-  image          String?
-  email          String?   @unique
+  email          String    @unique
+  cpf            String    @unique
   emailVerified  DateTime?
   hashedPassword String?
   createdAt      DateTime  @default(now())
@@ -61,7 +61,7 @@ model VerificationToken {
 model Card {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
   name         String   @unique
-  cpf          String?
+  cpf          String?  @unique
   updatedAt    DateTime @updatedAt
   createdAt    DateTime @default(now())
   wasDelivered Boolean? @default(false)

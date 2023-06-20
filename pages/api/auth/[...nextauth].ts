@@ -4,6 +4,7 @@ import Credentials from 'next-auth/providers/credentials';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import { compare } from 'bcrypt';
 import prismadb from '@/libs/prismadb';
+import { User } from '@prisma/client';
 
 export const authOptions: AuthOptions = {
   providers: [
@@ -19,37 +20,65 @@ export const authOptions: AuthOptions = {
           label: 'Email',
           type: 'text',
         },
+        cpf: {
+          label: 'CPF',
+          type: 'text'
+        },
         password: {
           label: 'Password',
           type: 'password'
         }
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
-          throw new Error('Email and password required');
+        if(!credentials?.cpf) {
+          if (!credentials?.email || !credentials?.password) {
+            throw new Error('Existem campos em branco');
+          }
+  
+          const user = await prismadb.user.findUnique({ where: {
+            email: credentials.email
+          }});
+  
+          if (!user || !user.hashedPassword) {
+            throw new Error('Email incorreto/Usuário não existe');
+          }
+  
+          const isCorrectPassword = await compare(credentials.password, user.hashedPassword);
+  
+          if (!isCorrectPassword) {
+            throw new Error('Senha incorreta');
+          }
+          return user;
+        } else {
+          if (!credentials?.cpf || !credentials?.password) {
+            throw new Error('Existem campos em branco');
+          }
+  
+          const user = await prismadb.user.findUnique({ where: {
+            cpf: credentials.cpf
+          }});
+  
+          if (!user || !user.hashedPassword) {
+            throw new Error('CPF incorreto/Usuário não existe');
+          }
+  
+          const isCorrectPassword = await compare(credentials.password, user.hashedPassword);
+  
+          if (!isCorrectPassword) {
+            throw new Error('Senha incorreta');
+          }
+          return user;
         }
 
-        const user = await prismadb.user.findUnique({ where: {
-          email: credentials.email
-        }});
-
-        if (!user || !user.hashedPassword) {
-          throw new Error('Email does not exist');
-        }
-
-        const isCorrectPassword = await compare(credentials.password, user.hashedPassword);
-
-        if (!isCorrectPassword) {
-          throw new Error('Incorrect password');
-        }
-
-        return user;
       }
     })
   ],
   debug: process.env.NODE_ENV === 'development',
   adapter: PrismaAdapter(prismadb),
   session: { strategy: 'jwt' },
+  pages: {
+    signIn: '/auth'
+  },
   jwt: {
     secret: process.env.NEXTAUTH_JWT_SECRET,
   },
