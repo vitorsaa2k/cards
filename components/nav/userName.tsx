@@ -14,13 +14,13 @@ export function UserName({ session }: UserNameType) {
 	});
 	return (
 		<>
-			<div
+			<button
 				onClick={() => setIsShowing(prevState => !prevState)}
 				className="flex gap-1 hover:cursor-pointer"
 			>
-				<p>{session.user?.name}</p>
+				{session.user?.name}
 				<VscTriangleDown size={24} />
-			</div>
+			</button>
 			{transition((style, item) =>
 				item ? (
 					<animated.div style={style}>
