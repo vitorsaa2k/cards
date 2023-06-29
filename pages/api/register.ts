@@ -10,7 +10,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if(req.method !== 'POST') {
     return res.status(405).end()
   }
-  const {email, cpf, name, password} = req.body.user
+  const {email, cpf, name, password, phone} = req.body.user
 
   if(cpf.toString().length <= 0) {
     try {
@@ -32,6 +32,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           hashedPassword,
           emailVerified: new Date(),
           cpf: generateRandomKey(),
+          phone
         }
       }).then(data => {
         res.status(200).json(data) 
@@ -63,6 +64,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           hashedPassword,
           emailVerified: undefined,
           cpf: formatedCpf,
+          phone
         }
       }).then(data => {
         res.status(200).json(data) 

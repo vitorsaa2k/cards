@@ -3,6 +3,7 @@ import { Input } from "../common/input";
 import { Button } from "../common/button";
 import { signUp } from "@/actions/cards";
 import { VscMail } from "react-icons/vsc";
+import { BsPhone } from "react-icons/bs";
 import { RxPerson, RxLockClosed } from "react-icons/rx";
 import { BsPersonVcard } from "react-icons/bs";
 import { formatCpf } from "@/actions/common";
@@ -15,6 +16,7 @@ export default function SignUp() {
 		email: "",
 		password: "",
 		name: "",
+		phone: "",
 	});
 	const { push } = useRouter();
 
@@ -94,6 +96,16 @@ export default function SignUp() {
 				<Button type="button" onClick={e => setIsCpf(!isCpf)}>
 					{isCpf ? "Usar Email" : "Usar CPF"}
 				</Button>
+				<label>
+					Telefone
+					<Input
+						icon={<BsPhone size={24} />}
+						value={credencials.phone}
+						onChange={handleChange}
+						name="phone"
+						placeholder="Número de telefone"
+					/>
+				</label>
 				<label>
 					Senha
 					<Input

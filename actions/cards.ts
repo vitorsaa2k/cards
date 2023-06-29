@@ -21,6 +21,6 @@ export async function searchCardOnDB(name: string) {
   return await axios.post('/api/card/search', { name }).then(res => res.data).catch(error => console.error(error))
 }
 
-export async function signUp(user: { cpf: string; email: string; password: string; }) {
+export async function signUp(user: { cpf: string; email: string; password: string, name: string, phone: string }) {
   return await axios.post('/api/register', {user}).then(res => res.data).catch(error => console.error(error))
 }

@@ -1,21 +1,34 @@
+import { sendMessage } from '../message';
 import prismadb from '@/libs/prismadb';
 import { NextApiRequest, NextApiResponse } from 'next'
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const {cpf, name }= req.body
   
   if(req.method === 'POST') {
     
   try {
-    const parsedCpf = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4") ?? ''
+    const parsedCpf: string = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4") ?? ''
+    const user = await prismadb.user.findUnique({
+      where: {
+        cpf: parsedCpf,
+      },
+    })
 
-    const card = prismadb.card.create({
+    const card = await prismadb.card.create({
       data: {
         name,
         cpf: parsedCpf,
         wasDelivered: false
       }
-    }).then(data => res.status(200).json(data))
+    }).then(async data => {
+
+      if(user && user.phone) {
+        await sendMessage(user.phone)
+      }
+      
+      return res.status(200).json(data)
+    })
 
   } catch (error) {
     console.log(error)
