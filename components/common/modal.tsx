@@ -1,15 +1,6 @@
 import { ModalType } from "@/types/components";
-import { useEffect, useState } from "react";
 
 export function Modal({ isShowing, toggle, children }: ModalType) {
-	const [show, setShow] = useState(false);
-
-	useEffect(() => {
-		setTimeout(() => {
-			setShow(true);
-		}, 100);
-	}, []);
-
 	return (
 		<>
 			{isShowing ? (
