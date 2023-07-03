@@ -1,11 +1,12 @@
-import { UserNameType } from "@/types/components";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { VscTriangleDown } from "react-icons/vsc";
 import { DropDown } from "./dropDown";
 import { animated, useTransition } from "@react-spring/web";
+import UserContext from "@/contexts/user";
 
-export function UserName({ session }: UserNameType) {
+export function UserName() {
 	const [isShowing, setIsShowing] = useState(false);
+	const user = useContext(UserContext);
 	const transition = useTransition(isShowing, {
 		from: { opacity: 0, y: 0 },
 		enter: { opacity: 1, y: 10 },
@@ -18,13 +19,13 @@ export function UserName({ session }: UserNameType) {
 				onClick={() => setIsShowing(prevState => !prevState)}
 				className="flex gap-1 hover:cursor-pointer"
 			>
-				{session.user?.name}
+				{user?.name}
 				<VscTriangleDown size={24} />
 			</button>
 			{transition((style, item) =>
 				item ? (
 					<animated.div style={style}>
-						<DropDown session={session} />
+						<DropDown />
 					</animated.div>
 				) : null
 			)}
