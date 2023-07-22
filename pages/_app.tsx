@@ -8,6 +8,7 @@ import { Header } from "@/components/nav/nav";
 import { SessionProvider } from "next-auth/react";
 import type { Session } from "next-auth";
 import { SkeletonTheme } from "react-loading-skeleton";
+import { UserProvider } from "@/contexts/user";
 
 const queryClient = new QueryClient();
 
@@ -27,10 +28,12 @@ export default function App({
 			</Head>
 			<SessionProvider session={session}>
 				<QueryClientProvider client={queryClient}>
-					<SkeletonTheme baseColor="#ededed" highlightColor="#d1d1d1">
-						<Header />
-						<Component {...pageProps} />
-					</SkeletonTheme>
+					<UserProvider>
+						<SkeletonTheme baseColor="#ededed" highlightColor="#d1d1d1">
+							<Header />
+							<Component {...pageProps} />
+						</SkeletonTheme>
+					</UserProvider>
 				</QueryClientProvider>
 			</SessionProvider>
 		</main>

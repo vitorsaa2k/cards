@@ -1,13 +1,5 @@
-import { getUser } from "@/actions/common";
 import { UserType } from "@/types/api";
-import { useSession } from "next-auth/react";
-import {
-	ReactNode,
-	createContext,
-	useCallback,
-	useEffect,
-	useState,
-} from "react";
+import { ReactNode, createContext, useEffect, useState } from "react";
 
 const initialUser: UserType = {
 	cpf: "",
@@ -18,28 +10,31 @@ const initialUser: UserType = {
 	id: "",
 	name: "",
 	updatedAt: "",
+	phone: "",
 };
 
-const UserContext = createContext<UserType>(initialUser);
+async function triggerUpdate(user: UserType) {}
+
+const UserContext = createContext({ ...initialUser, triggerUpdate });
 
 export function UserProvider({ children }: { children: ReactNode }) {
-	const { data: session, status } = useSession();
 	const [user, setUser] = useState<UserType>(initialUser);
-	const [isLoading, setIsLoading] = useState(true);
-	const get = useCallback(
-		async () =>
-			getUser(session?.user?.email!).then(data => {
-				setUser(data);
-				setIsLoading(false);
-				return data;
-			}),
-		[session]
-	);
+	async function triggerUpdate(user: UserType) {
+		setUser(user);
+		localStorage.setItem("user", JSON.stringify(user));
+	}
 
 	useEffect(() => {
-		isLoading ? get() : null;
-	}, [isLoading, get]);
-	return <UserContext.Provider value={user!}>{children}</UserContext.Provider>;
+		if (localStorage.getItem("user")) {
+			setUser(JSON.parse(localStorage.getItem("user")!));
+		}
+	}, []);
+
+	return (
+		<UserContext.Provider value={{ ...user!, triggerUpdate }}>
+			{children}
+		</UserContext.Provider>
+	);
 }
 
 export default UserContext;

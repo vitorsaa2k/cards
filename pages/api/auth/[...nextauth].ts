@@ -79,6 +79,21 @@ export const authOptions: AuthOptions = {
   pages: {
     signIn: '/auth'
   },
+  callbacks: {
+    async session({session}) {
+      const fullUser = await prismadb.user.findUnique({
+        where: {
+          email: session.user?.email!
+        }
+      }).then(data => {
+        session.user!.cpf! = data?.cpf!
+        session.user!.phone! = data?.phone!
+        session.user!.id! = data?.id!
+      })
+
+      return session; 
+    }
+  },
   jwt: {
     secret: process.env.NEXTAUTH_JWT_SECRET,
   },

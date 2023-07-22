@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { UserName } from "./userName";
-import { UserProvider } from "@/contexts/user";
 
 export function Header() {
 	const { status } = useSession();
@@ -17,9 +16,7 @@ export function Header() {
 			</div>
 			<div>
 				{status === "authenticated" ? (
-					<UserProvider>
-						<UserName />
-					</UserProvider>
+					<UserName />
 				) : (
 					<Link className="hover:bg-black/30 px-2 py-1 rounded" href={"/auth"}>
 						Log in

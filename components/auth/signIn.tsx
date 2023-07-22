@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useRef, useState } from "react";
 import { Input } from "../common/input";
 import { Button } from "../common/button";
 import { signIn } from "next-auth/react";
@@ -6,6 +6,8 @@ import { VscMail } from "react-icons/vsc";
 import { RxLockClosed } from "react-icons/rx";
 import { BsPersonVcard } from "react-icons/bs";
 import { formatCpf } from "@/actions/common";
+import { getUser } from "@/actions/user";
+import UserContext from "@/contexts/user";
 
 export function SignIn() {
 	const [isCpf, setIsCpf] = useState(false);
@@ -14,6 +16,7 @@ export function SignIn() {
 		email: "",
 		password: "",
 	});
+	const user = useContext(UserContext);
 
 	useEffect(() => {
 		if (isCpf) {
@@ -31,9 +34,14 @@ export function SignIn() {
 
 	async function logIn() {
 		const res = await signIn("credentials", {
-			redirect: true,
+			redirect: false,
 			...credencials,
 			callbackUrl: "/cards",
+		}).then(async data => {
+			if (!data?.error) {
+				const newUser = await getUser(credencials.email);
+				user.triggerUpdate(newUser);
+			}
 		});
 	}
 
