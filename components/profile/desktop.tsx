@@ -59,7 +59,7 @@ export function DesktopProfile() {
 
 	async function submitUser() {
 		setIsSubmiting(true);
-		await updateUser(currentUser, initialUser.email)
+		await updateUser("email", initialUser.email, currentUser)
 			.then(async (res: UserType) => {
 				setCurrentUser(res);
 				setInitialUser(res);
@@ -79,6 +79,24 @@ export function DesktopProfile() {
 							value={currentUser?.email}
 							name="email"
 							type="email"
+							onChange={handleChange}
+						/>
+					</label>
+					<label className="flex flex-col gap-1">
+						Nome:
+						<Input
+							value={currentUser?.name}
+							name="name"
+							type="text"
+							onChange={handleChange}
+						/>
+					</label>
+					<label className="flex flex-col gap-1">
+						CPF:
+						<Input
+							value={currentUser?.cpf}
+							name="cpf"
+							type="cpf"
 							onChange={handleChange}
 						/>
 					</label>

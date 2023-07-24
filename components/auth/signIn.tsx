@@ -39,8 +39,15 @@ export function SignIn() {
 			callbackUrl: "/cards",
 		}).then(async data => {
 			if (!data?.error) {
-				const newUser = await getUser(credencials.email);
-				user.triggerUpdate(newUser);
+				const newUser = async () => {
+					if (isCpf) {
+						return await getUser(credencials.cpf);
+					} else {
+						return await getUser(credencials.email);
+					}
+				};
+				console.log(await newUser());
+				user.triggerUpdate(await newUser());
 			}
 		});
 	}
