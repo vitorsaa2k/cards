@@ -3,12 +3,11 @@ import prismadb  from '@/libs/prismadb';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const field = `${req.query.field}`
-  console.log('field', field)
+  const type = `${req.query.type}`
   const data = req.body
-  console.log('data', data)
   if(req.method === 'GET') {
 
-    if(field.indexOf('@') === -1 && field.indexOf('-') !== -1) {
+    if(type === 'cpf') {
       const user = prismadb.user.findUnique({
         where: {
           cpf: field
@@ -26,7 +25,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   if(req.method === 'POST') {
-    if(data.type === 'email') {
+    if(type === 'email') {
       const user = prismadb.user.update({
         data: {
           cpf: data.cpf,

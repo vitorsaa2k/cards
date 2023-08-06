@@ -8,6 +8,7 @@ import { BsPersonVcard } from "react-icons/bs";
 import { formatCpf } from "@/actions/common";
 import { getUser } from "@/actions/user";
 import UserContext from "@/contexts/user";
+import { useRouter } from "next/router";
 
 export function SignIn() {
 	const [isCpf, setIsCpf] = useState(false);
@@ -17,6 +18,7 @@ export function SignIn() {
 		password: "",
 	});
 	const user = useContext(UserContext);
+	const { push, replace, reload } = useRouter();
 
 	useEffect(() => {
 		if (isCpf) {
@@ -41,14 +43,16 @@ export function SignIn() {
 			if (!data?.error) {
 				const newUser = async () => {
 					if (isCpf) {
-						return await getUser(credencials.cpf);
+						return await getUser("cpf", credencials.cpf);
 					} else {
-						return await getUser(credencials.email);
+						return await getUser("email", credencials.email);
 					}
 				};
 				console.log(await newUser());
 				user.triggerUpdate(await newUser());
+				push("/userprofile");
 			}
+			console.log(data);
 		});
 	}
 

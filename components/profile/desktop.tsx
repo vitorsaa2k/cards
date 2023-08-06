@@ -27,11 +27,15 @@ export function DesktopProfile() {
 	const userContext = useContext(UserContext);
 	console.log(userContext);
 
-	const userQuery = useQuery(["user"], () => getUser(userContext.email), {
-		initialData: userContext,
-		refetchOnWindowFocus: false,
-		enabled: userContext.email.length > 0,
-	});
+	const userQuery = useQuery(
+		["user"],
+		() => getUser("email", userContext.email),
+		{
+			initialData: userContext,
+			refetchOnWindowFocus: false,
+			enabled: userContext.email.length > 0,
+		}
+	);
 	const [initialUser, setInitialUser] = useState(userQuery.data!);
 	const [currentUser, setCurrentUser] = useState(userQuery.data!);
 	const [isSubmiting, setIsSubmiting] = useState(false);
