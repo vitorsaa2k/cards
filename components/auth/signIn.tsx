@@ -9,6 +9,7 @@ import { formatCpf } from "@/actions/common";
 import { getUser } from "@/actions/user";
 import UserContext from "@/contexts/user";
 import { useRouter } from "next/router";
+import { toast } from "react-toastify";
 
 export function SignIn() {
 	const [isCpf, setIsCpf] = useState(false);
@@ -18,7 +19,7 @@ export function SignIn() {
 		password: "",
 	});
 	const user = useContext(UserContext);
-	const { push, replace, reload } = useRouter();
+	const { push } = useRouter();
 
 	useEffect(() => {
 		if (isCpf) {
@@ -41,6 +42,7 @@ export function SignIn() {
 			callbackUrl: "/cards",
 		}).then(async data => {
 			if (!data?.error) {
+				toast.success("Login efetuado!");
 				const newUser = async () => {
 					if (isCpf) {
 						return await getUser("cpf", credencials.cpf);
@@ -51,6 +53,8 @@ export function SignIn() {
 				console.log(await newUser());
 				user.triggerUpdate(await newUser());
 				push("/userprofile");
+			} else {
+				toast.error(data.error);
 			}
 			console.log(data);
 		});
