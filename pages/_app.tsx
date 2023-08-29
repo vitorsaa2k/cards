@@ -10,6 +10,7 @@ import type { Session } from "next-auth";
 import { SkeletonTheme } from "react-loading-skeleton";
 import { UserProvider } from "@/contexts/user";
 import { ToastContainer } from "react-toastify";
+import { Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const queryClient = new QueryClient();
@@ -34,7 +35,7 @@ export default function App({
 						<SkeletonTheme baseColor="#ededed" highlightColor="#d1d1d1">
 							<Header />
 							<Component {...pageProps} />
-							<ToastContainer position="bottom-right" />
+							<ToastContainer position="bottom-right" transition={Slide} />
 						</SkeletonTheme>
 					</UserProvider>
 				</QueryClientProvider>
