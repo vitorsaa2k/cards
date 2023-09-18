@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
 import { Input } from "../common/input";
 import { Button } from "../common/button";
 import { signUp } from "@/actions/cards";
@@ -7,7 +7,10 @@ import { BsPhone } from "react-icons/bs";
 import { RxPerson, RxLockClosed } from "react-icons/rx";
 import { BsPersonVcard } from "react-icons/bs";
 import { formatCpf } from "@/actions/common";
-import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import { UserType } from "@/types/api";
+import { signIn } from "next-auth/react";
+import UserContext from "@/contexts/user";
 
 export default function SignUp() {
 	const [isCpf, setIsCpf] = useState(false);
@@ -18,7 +21,7 @@ export default function SignUp() {
 		name: "",
 		phone: "",
 	});
-	const { push } = useRouter();
+	const user = useContext(UserContext);
 
 	useEffect(() => {
 		if (isCpf) {
@@ -36,9 +39,14 @@ export default function SignUp() {
 
 	async function register() {
 		await signUp(credencials)
-			.then(response => {
+			.then((response: UserType) => {
 				if (response) {
-					push("/cards");
+					toast.success("Conta Criada!");
+					user.triggerUpdate(response);
+					signIn("credentials", {
+						...credencials,
+						callbackUrl: "/cards",
+					});
 				}
 			})
 			.catch(error => console.log(error));
