@@ -14,14 +14,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if(cpf.toString().length <= 0) {
     try {
-  
+      if(!email || !name || !password || !phone) {
+        return res.json({error: 'Existem campos em branco'})
+      }
       const existingUser = await prismadb.user.findUnique({
         where: {
           email,
         }
       })
       if(existingUser) {
-        return res.status(422).json({email: 'Email taken'})
+        return res.json({error: 'Esse email já está em uso'})
       }
   
       const hashedPassword = await bcrypt.hash(password, 12)
@@ -35,24 +37,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           phone
         }
       }).then(data => {
-        res.status(200).json(data) 
-        return redirect('/cards')
+        res.status(200).json({user: data}) 
       })
   
     } catch (error) {
-      console.log(error)
       return res.status(400).end()
     }
   } else {
     try {
-  
+      if(!cpf || !name || !password || !phone) {
+        return res.json({error: 'Existem campos em branco'})
+      }
       const existingUser = await prismadb.user.findUnique({
         where: {
           cpf,
         }
       })
       if(existingUser) {
-        return res.status(422).json({cpf: 'esse cpf já esta sendo usado'})
+        return res.json({error: 'Esse CPF já está em uso'})
       }
       const formatedCpf = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4")
   
@@ -67,8 +69,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           phone
         }
       }).then(data => {
-        res.status(200).json(data) 
-        return redirect('/cards')
+        res.status(200).json({user: data}) 
       })
   
     } catch (error) {

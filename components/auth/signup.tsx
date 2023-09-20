@@ -39,14 +39,16 @@ export default function SignUp() {
 
 	async function register() {
 		await signUp(credencials)
-			.then((response: UserType) => {
-				if (response) {
+			.then((response: { user: UserType | null; error: string | null }) => {
+				if (!response.error && response.user) {
 					toast.success("Conta Criada!");
-					user.triggerUpdate(response);
+					user.triggerUpdate(response.user);
 					signIn("credentials", {
 						...credencials,
 						callbackUrl: "/cards",
 					});
+				} else {
+					toast.error(response.error);
 				}
 			})
 			.catch(error => console.log(error));
