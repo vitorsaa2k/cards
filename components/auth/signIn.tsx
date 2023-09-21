@@ -1,99 +1,76 @@
-import { ChangeEvent, useContext, useEffect, useRef, useState } from "react";
+import { useContext, useState } from "react";
 import { Input } from "../common/input";
 import { Button } from "../common/button";
+import { CpfInput } from "../common/cpfInput";
 import { signIn } from "next-auth/react";
 import { VscMail } from "react-icons/vsc";
 import { RxLockClosed } from "react-icons/rx";
 import { BsPersonVcard } from "react-icons/bs";
-import { formatCpf } from "@/actions/common";
 import { getUser } from "@/actions/user";
 import UserContext from "@/contexts/user";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
+import { useForm, SubmitHandler, FieldValues } from "react-hook-form";
+import { ScreenLoading } from "../common/loading";
 
 export function SignIn() {
 	const [isCpf, setIsCpf] = useState(false);
-	const [credencials, setCredentials] = useState({
-		cpf: "",
-		email: "",
-		password: "",
-	});
 	const user = useContext(UserContext);
 	const { push } = useRouter();
 
-	useEffect(() => {
-		if (isCpf) {
-			setCredentials(prevState => ({
-				...prevState,
-				email: "",
-			}));
-		} else {
-			setCredentials(prevState => ({
-				...prevState,
-				cpf: "",
-			}));
-		}
-	}, [isCpf]);
-
-	async function logIn() {
+	const {
+		register,
+		handleSubmit,
+		unregister,
+		formState: { isSubmitting },
+	} = useForm<FieldValues>({
+		mode: "onBlur",
+	});
+	const onSubmit: SubmitHandler<FieldValues> = async data => {
 		const res = await signIn("credentials", {
 			redirect: false,
-			...credencials,
+			...data,
 			callbackUrl: "/cards",
-		}).then(async data => {
-			if (!data?.error) {
+		}).then(async res => {
+			if (!res?.error) {
 				toast.success("Login efetuado!");
 				const newUser = async () => {
 					if (isCpf) {
-						return await getUser("cpf", credencials.cpf);
+						return await getUser("cpf", data.cpf);
 					} else {
-						return await getUser("email", credencials.email);
+						return await getUser("email", data.email);
 					}
 				};
-				console.log(await newUser());
 				user.triggerUpdate(await newUser());
 				push("/userprofile");
 			} else {
-				toast.error(data.error);
+				toast.error(res.error);
 			}
-			console.log(data);
 		});
-	}
+	};
 
-	function handleChange(e: ChangeEvent<HTMLInputElement>) {
-		let { name, value } = e.currentTarget;
-		if (name === "cpf") {
-			value = formatCpf(value, credencials.cpf);
-		}
-		setCredentials(prevState => ({
-			...prevState,
-			[name]: value,
-		}));
-	}
 	return (
 		<>
-			<form className="flex flex-col gap-2">
+			<form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
 				<label>
 					{isCpf ? (
 						<>
 							CPF
-							<Input
+							<CpfInput
+								register={register}
 								icon={<BsPersonVcard size={22} />}
-								onChange={handleChange}
 								name="cpf"
 								placeholder="CPF"
-								value={credencials.cpf}
 							/>
 						</>
 					) : (
 						<>
 							Email
 							<Input
+								register={register}
 								icon={<VscMail size={24} />}
-								onChange={handleChange}
 								name="email"
 								placeholder="Email"
-								value={credencials.email}
 							/>
 						</>
 					)}
@@ -101,6 +78,7 @@ export function SignIn() {
 				<Button
 					type="button"
 					onClick={e => {
+						isCpf ? unregister("cpf") : unregister("email");
 						setIsCpf(!isCpf);
 					}}
 				>
@@ -109,16 +87,15 @@ export function SignIn() {
 				<label>
 					Senha
 					<Input
+						register={register}
 						icon={<RxLockClosed size={24} />}
-						onChange={handleChange}
 						name="password"
 						type="password"
 						placeholder="Senha"
-						value={credencials.password}
 					/>
 				</label>
-				<Button type="button" onClick={logIn}>
-					Entrar
+				<Button disabled={isSubmitting} type="submit">
+					{isSubmitting ? <ScreenLoading isSpinner /> : "Entrar"}
 				</Button>
 			</form>
 		</>

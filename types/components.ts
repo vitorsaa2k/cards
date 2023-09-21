@@ -1,8 +1,10 @@
 import { Session } from "next-auth";
 import { ButtonHTMLAttributes, HTMLAttributes, InputHTMLAttributes, ReactNode } from "react";
+import { FieldValues, UseFormRegister } from "react-hook-form";
 
 export interface InputType extends InputHTMLAttributes<HTMLInputElement> {
   icon?: ReactNode
+  register?: UseFormRegister<FieldValues>
 }
 
 export interface TableRowType {
