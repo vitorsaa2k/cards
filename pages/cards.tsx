@@ -8,6 +8,7 @@ import { getCards, searchCardOnDB } from "@/actions/cards";
 import { AddCardButton } from "@/components/cards/addCardButton";
 import { useDebounce } from "@/hooks/useDebounce";
 import Skeleton from "react-loading-skeleton";
+import { FieldValues, useForm } from "react-hook-form";
 
 function Card() {
 	const cardsQuery = useQuery<CardType[]>(["cards"], getCards);
@@ -17,6 +18,10 @@ function Card() {
 		setCards([]);
 		await searchCardOnDB(name).then(res => setCards(res));
 	}
+
+	const { register, handleSubmit, unregister } = useForm<FieldValues>({
+		mode: "onBlur",
+	});
 
 	const debounceSearch = useDebounce(searchOnDB, 500);
 
@@ -55,6 +60,7 @@ function Card() {
 				<div></div>
 				<div className="p-5">
 					<Input
+						register={register}
 						onChange={e => debounceSearch(e.currentTarget.value)}
 						icon={<RxMagnifyingGlass className="text-slate-500" size={24} />}
 						placeholder="Nome"

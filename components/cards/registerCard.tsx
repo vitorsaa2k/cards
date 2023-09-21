@@ -6,12 +6,17 @@ import { addCard } from "@/actions/cards";
 import { CardType } from "@/types/api";
 import { ScreenLoading } from "../common/loading";
 import { formatCpf } from "@/actions/common";
+import { FieldValues, useForm } from "react-hook-form";
 
 export function RegisterCard({ toggle }: { toggle: () => void }) {
 	const queryClient = useQueryClient();
 	const [form, setForm] = useState({
 		name: "",
 		cpf: "",
+	});
+
+	const { register, handleSubmit, unregister } = useForm<FieldValues>({
+		mode: "onBlur",
 	});
 
 	const mutation = useMutation((card: CardType) => addCard(card), {
@@ -41,12 +46,14 @@ export function RegisterCard({ toggle }: { toggle: () => void }) {
 			<form className="p-2 gap-2 flex flex-col justify-between">
 				<div className="text-2xl">Adicionar cartão</div>
 				<Input
+					register={register}
 					name="name"
 					placeholder="Digite o nome"
 					value={form.name}
 					onChange={handleInputs}
 				/>
 				<Input
+					register={register}
 					name="cpf"
 					placeholder="Digite o CPF"
 					value={form.cpf}

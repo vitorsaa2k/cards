@@ -8,6 +8,7 @@ import { ScreenLoading } from "../common/loading";
 import { useRouter } from "next/navigation";
 import UserContext from "@/contexts/user";
 import { UserType } from "@/types/api";
+import { FieldValues, useForm } from "react-hook-form";
 
 export function DesktopProfile() {
 	const [wasCalled, setWasCalled] = useState(false);
@@ -25,7 +26,10 @@ export function DesktopProfile() {
 	});
 
 	const userContext = useContext(UserContext);
-	console.log(userContext);
+
+	const { register, handleSubmit, unregister } = useForm<FieldValues>({
+		mode: "onBlur",
+	});
 
 	const userQuery = useQuery(
 		["user"],
@@ -80,6 +84,7 @@ export function DesktopProfile() {
 					<label className="flex flex-col gap-1">
 						Email:
 						<Input
+							register={register}
 							value={currentUser?.email}
 							name="email"
 							type="email"
@@ -89,6 +94,7 @@ export function DesktopProfile() {
 					<label className="flex flex-col gap-1">
 						Nome:
 						<Input
+							register={register}
 							value={currentUser?.name}
 							name="name"
 							type="text"
@@ -98,6 +104,7 @@ export function DesktopProfile() {
 					<label className="flex flex-col gap-1">
 						CPF:
 						<Input
+							register={register}
 							value={currentUser?.cpf}
 							name="cpf"
 							type="cpf"

@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 import { UserType } from "@/types/api";
 import { signIn } from "next-auth/react";
 import UserContext from "@/contexts/user";
+import { FieldValues, useForm } from "react-hook-form";
 
 export default function SignUp() {
 	const [isCpf, setIsCpf] = useState(false);
@@ -37,7 +38,11 @@ export default function SignUp() {
 		}
 	}, [isCpf]);
 
-	async function register() {
+	const { register, handleSubmit, unregister } = useForm<FieldValues>({
+		mode: "onBlur",
+	});
+
+	async function createUser() {
 		await signUp(credencials)
 			.then((response: { user: UserType | null; error: string | null }) => {
 				if (!response.error && response.user) {
@@ -70,6 +75,7 @@ export default function SignUp() {
 				<label>
 					Nome
 					<Input
+						register={register}
 						icon={<RxPerson size={24} />}
 						placeholder="Nome"
 						name="name"
@@ -83,6 +89,7 @@ export default function SignUp() {
 						<>
 							CPF
 							<Input
+								register={register}
 								icon={<BsPersonVcard size={22} />}
 								onChange={handleChange}
 								name="cpf"
@@ -94,6 +101,7 @@ export default function SignUp() {
 						<>
 							Email
 							<Input
+								register={register}
 								icon={<VscMail size={24} />}
 								onChange={handleChange}
 								name="email"
@@ -109,6 +117,7 @@ export default function SignUp() {
 				<label>
 					Telefone
 					<Input
+						register={register}
 						icon={<BsPhone size={24} />}
 						value={credencials.phone}
 						onChange={handleChange}
@@ -119,6 +128,7 @@ export default function SignUp() {
 				<label>
 					Senha
 					<Input
+						register={register}
 						icon={<RxLockClosed size={24} />}
 						onChange={handleChange}
 						name="password"
@@ -127,7 +137,7 @@ export default function SignUp() {
 						value={credencials.password}
 					/>
 				</label>
-				<Button type="button" onClick={register}>
+				<Button type="button" onClick={createUser}>
 					Criar conta
 				</Button>
 			</form>
