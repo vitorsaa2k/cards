@@ -4,7 +4,7 @@ import { FieldValues, UseFormRegister } from "react-hook-form";
 
 export interface InputType extends InputHTMLAttributes<HTMLInputElement> {
   icon?: ReactNode
-  register: UseFormRegister<FieldValues>
+  register?: UseFormRegister<FieldValues>
 }
 
 export interface TableRowType {
