@@ -2,7 +2,6 @@ import prismadb  from '@/libs/prismadb';
 import bcrypt from 'bcrypt'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { generateRandomKey } from '@/actions/common';
-import { redirect } from 'next/navigation'
 
 
 
@@ -12,7 +11,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
   const {email, cpf, name, password, phone} = req.body.user
 
-  if(cpf.toString().length <= 0) {
+  if(!cpf) {
     try {
       if(!email || !name || !password || !phone) {
         return res.json({error: 'Existem campos em branco'})
@@ -56,7 +55,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if(existingUser) {
         return res.json({error: 'Esse CPF já está em uso'})
       }
-      const formatedCpf = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4")
   
       const hashedPassword = await bcrypt.hash(password, 12)
       const user = await prismadb.user.create({
@@ -65,7 +63,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           name,
           hashedPassword,
           emailVerified: undefined,
-          cpf: formatedCpf,
+          cpf,
           phone
         }
       }).then(data => {
