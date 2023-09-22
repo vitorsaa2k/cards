@@ -12,12 +12,18 @@ import { signIn } from "next-auth/react";
 import UserContext from "@/contexts/user";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { CpfInput } from "../common/cpfInput";
+import { ScreenLoading } from "../common/loading";
 
 export default function SignUp() {
 	const [isCpf, setIsCpf] = useState(false);
 	const user = useContext(UserContext);
 
-	const { register, handleSubmit, unregister } = useForm<FieldValues>({
+	const {
+		register,
+		handleSubmit,
+		unregister,
+		formState: { isSubmitting },
+	} = useForm<FieldValues>({
 		mode: "onBlur",
 	});
 
@@ -107,7 +113,9 @@ export default function SignUp() {
 						placeholder="Senha"
 					/>
 				</label>
-				<Button type="submit">Criar conta</Button>
+				<Button disabled={isSubmitting} type="submit">
+					{isSubmitting ? <ScreenLoading isSpinner /> : "Criar Conta"}
+				</Button>
 			</form>
 		</>
 	);
