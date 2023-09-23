@@ -47,6 +47,7 @@ export function TableRow({
 				<>
 					{wasDelivered === "Status" ? null : (
 						<button
+							title="Deletar cartão"
 							onClick={() => {
 								mutateToDelete.mutate(id);
 							}}
@@ -60,6 +61,7 @@ export function TableRow({
 				<>
 					{wasDelivered === "Status" ? null : (
 						<button
+							title="Marcar cartão como entrege"
 							onClick={() => mutateToDelivered.mutate(id)}
 							className="rounded p-1 hover:bg-green-500 transition"
 						>
