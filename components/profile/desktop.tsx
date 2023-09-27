@@ -1,4 +1,4 @@
-import { ChangeEvent, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Input } from "../common/input";
 import { Button } from "../common/button";
 import { getUser, updateUser } from "@/actions/user";
@@ -8,115 +8,88 @@ import { ScreenLoading } from "../common/loading";
 import { useRouter } from "next/navigation";
 import UserContext from "@/contexts/user";
 import { UserType } from "@/types/api";
-import { FieldValues, useForm } from "react-hook-form";
+import { FieldValues, SubmitHandler, useForm, useWatch } from "react-hook-form";
+import { CpfInput } from "../common/cpfInput";
 
 export function DesktopProfile() {
-	const [wasCalled, setWasCalled] = useState(false);
 	const { push } = useRouter();
-	const {
-		data: session,
-		update,
-		status,
-	} = useSession({
+	const { status } = useSession({
 		required: true,
 		onUnauthenticated() {
-			wasCalled ? null : push("/auth");
-			setWasCalled(true);
+			push("/auth");
 		},
 	});
-
 	const userContext = useContext(UserContext);
-
-	const { register, handleSubmit, unregister } = useForm<FieldValues>({
-		mode: "onBlur",
-	});
-
 	const userQuery = useQuery(
 		["user"],
 		() => getUser("email", userContext.email),
 		{
 			initialData: userContext,
 			refetchOnWindowFocus: false,
-			enabled: userContext.email.length > 0,
 		}
 	);
-	const [initialUser, setInitialUser] = useState(userQuery.data!);
-	const [currentUser, setCurrentUser] = useState(userQuery.data!);
-	const [isSubmiting, setIsSubmiting] = useState(false);
 
-	const areUsersEqual =
-		JSON.stringify(initialUser) === JSON.stringify(currentUser);
+	const [initialUser, setInitialUser] = useState(userQuery.data!);
+
+	const {
+		register,
+		handleSubmit,
+		control,
+		formState: { isSubmitting },
+	} = useForm<FieldValues>({
+		mode: "onBlur",
+		values: userContext,
+	});
+
+	const fields = useWatch({
+		control,
+	});
+
+	const onSubmit: SubmitHandler<FieldValues> = async data => {
+		await updateUser("email", initialUser.email, {
+			cpf: data.cpf,
+			email: data.email,
+			name: data.name,
+			phone: data.phone,
+		})
+			.then(async (res: UserType) => {
+				setInitialUser(res);
+				userContext.triggerUpdate(res);
+			})
+			.catch(err => console.error(err));
+	};
+
+	const areUsersEqual = JSON.stringify(initialUser) === JSON.stringify(fields);
 
 	useEffect(() => {
 		setInitialUser(userQuery.data!);
-		setCurrentUser(userQuery.data!);
 	}, [userQuery.data]);
-	console.log(userQuery);
 
 	useEffect(() => {
 		userQuery.refetch();
-	}, [userContext, userQuery]);
-
-	function handleChange(e: ChangeEvent<HTMLInputElement>) {
-		let { name, value } = e.currentTarget;
-		setCurrentUser(prevState => ({
-			...prevState,
-			[name]: value,
-		}));
-	}
-
-	async function submitUser() {
-		setIsSubmiting(true);
-		await updateUser("email", initialUser.email, currentUser)
-			.then(async (res: UserType) => {
-				setCurrentUser(res);
-				setInitialUser(res);
-				userContext.triggerUpdate(res);
-				setIsSubmiting(false);
-			})
-			.catch(err => console.error(err));
-	}
+	}, [initialUser, userQuery]);
 
 	if (status === "authenticated") {
 		return (
 			<div>
-				<form className="p-3 flex flex-col gap-5">
+				<form
+					onSubmit={handleSubmit(onSubmit)}
+					className="p-3 flex flex-col gap-5"
+				>
 					<label className="flex flex-col gap-1">
 						Email:
-						<Input
-							register={register}
-							value={currentUser?.email}
-							name="email"
-							type="email"
-							onChange={handleChange}
-						/>
+						<Input register={register} name="email" type="email" />
 					</label>
 					<label className="flex flex-col gap-1">
 						Nome:
-						<Input
-							register={register}
-							value={currentUser?.name}
-							name="name"
-							type="text"
-							onChange={handleChange}
-						/>
+						<Input register={register} name="name" type="text" />
 					</label>
 					<label className="flex flex-col gap-1">
 						CPF:
-						<Input
-							register={register}
-							value={currentUser?.cpf}
-							name="cpf"
-							type="cpf"
-							onChange={handleChange}
-						/>
+						<CpfInput register={register} name="cpf" />
 					</label>
-					<Button
-						disabled={areUsersEqual}
-						onClick={() => submitUser()}
-						type="button"
-					>
-						{isSubmiting ? <ScreenLoading isSpinner /> : "Salvar"}
+					<Button disabled={areUsersEqual || isSubmitting} type="submit">
+						{isSubmitting ? <ScreenLoading isSpinner /> : "Salvar"}
 					</Button>
 				</form>
 			</div>
